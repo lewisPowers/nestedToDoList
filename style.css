@@ -7,22 +7,26 @@
     --gradient: linear-gradient(rgba(153, 135, 235, 0.151), rgba(153, 135, 235, 0.062));
 } */
 
-html {
-    margin-left: 15%;
+html,
+body {
+    height: 100%;
+    width: 100%;
+    /* min-width: 600px; */
+}
+
+body {
+    max-width: 900px;
+    min-width: 600px;
+    margin: 0 auto;
 }
 
 h1 {
     text-align: center;
-
+    margin: 25px 0;
 }
 
 h1, .top {
     font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
-}
-
-body {
-    width: 70%;
-    max-width: 600px;
 }
 
 .top {
@@ -64,10 +68,8 @@ body {
 .how-to {
     display: flex;
     flex-direction: column;
-    /* justify-content: center; */
-    /* align-items: center; */
-    /* position: absolute; */
-    max-width:600px;
+    margin: 0 auto;
+    max-width:100%;
     line-height: 1.5em;
     background-color: rgb(153, 135, 235);
 }
@@ -80,6 +82,11 @@ body {
 
 .hidden {
     display: none;
+}
+
+#main {
+    max-width: 80%;
+    margin: 0 auto;
 }
 
 #todo-list > .li {
@@ -141,3 +148,6 @@ body {
     padding-left: 7px;
 }
 
+@media only screen and (max-width:600px) {
+
+}

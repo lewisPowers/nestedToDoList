@@ -462,7 +462,7 @@ let view = {
         let index = 0;
 
         if (!todos.length) {
-            todosUl.innerHTML = 'No Todos!';
+            todosUl.innerHTML = 'Nothing To Do!';
         } else {
             todosUl.innerHTML = '';
             function renderAll(list, ul) {
@@ -612,7 +612,6 @@ let view = {
             let label = elClicked.closest('label');
             let todoId = todo.dataset.id;
             if ( (e.altKey || e.shiftKey) && label !== null ) {
-                console.log(label)
                 view.editInput(todo, label);
             } else if (elClicked.className === 'toggle') {
                 App.toggleCompleted(todoId);
