@@ -17,7 +17,6 @@ h1 {
 }
 
 h1, .top {
-
     font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
 }
 
@@ -27,8 +26,6 @@ body {
 }
 
 .top {
-    /* border-radius: 5px; */
-    /* opacity: .8; */
     background-color: rgba(153, 135, 235, 0);
 }
 
@@ -54,11 +51,35 @@ body {
     display: inline-block;
     opacity: 1;
     border-style: none;
-
 }
 
 .delete:hover {
     background-color: skyblue;
+}
+
+#how-to-button {
+    margin: 0 auto;
+}
+
+.how-to {
+    display: flex;
+    flex-direction: column;
+    /* justify-content: center; */
+    /* align-items: center; */
+    /* position: absolute; */
+    max-width:600px;
+    line-height: 1.5em;
+    background-color: rgb(153, 135, 235);
+}
+
+.how-to > p {
+    /* text-align: center; */
+    color: white;
+    padding: 6px;
+}
+
+.hidden {
+    display: none;
 }
 
 #todo-list > .li {
@@ -91,16 +112,20 @@ body {
     background-color:  rgba(153, 135, 235, 0.062);
 }
 
-#clear-button:hover, #clear-completed:hover, #todo-input:hover {
+#clear-button:hover,
+#clear-completed:hover,
+#todo-input:hover,
+#how-to-button:hover {
     background-color: whitesmoke;
+    cursor: pointer;
 }
 
 #top-bar {
     background-color: rgba(153, 135, 235, 0.397);
     padding: 22px 0;
+    display: flex;
+    justify-content: space-between;
 }
-
-
 
 #todo-input {
     background-color: rgba(153, 135, 235, 0.062);

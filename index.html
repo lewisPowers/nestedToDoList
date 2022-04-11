@@ -7,17 +7,30 @@
         <div id="main">
             <h1>TO DO:</h1>
             <div id="top-bar">
-                <input class="top" id="todo-input" type="text">
+                <input class="top" id="todo-input" type="text" placeholder="Type New To Do">
                 <button class="top" id="clear-button">Clear All</button>
+                <button class="top" id="how-to-button">How To</button>
                 <button class="top" id="clear-completed">Clear Completed</button>
             </div>
-            
+            <div class="how-to hidden">
+                <p>Add Item: type text into input field; press enter</p>
+                <p>Mark Completed: hover over item; click checkbox</p>
+                <p>Edit Item: hover over item; hold shift, click text</p>
+                <p>Delete Item: hover over item; click the 'X'</p>
+                <p>Nesting Items: option 1) -single-click item to nest it into the item above it.
+                    <br>option 2) click and drag item to the right.
+                </p>
+                <p>Unnesting Item:option 1) -single-click item to unnest one layer.
+                    <br>option 2) click and drag item slightly to the left.</p>
+                    <p>Unnesting Item Completely: click and drag item greatly to the left.</p>
+            </div>
+
             <ul id="todo-list"></ul>
-    
+
         </div>
     </body>
-    
+
     <script src="client.js"></script>
-   
+
 </html>
 
