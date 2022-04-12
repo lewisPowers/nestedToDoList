@@ -70,6 +70,33 @@ var App = {
         view.displayTodos();
     },
 
+    newNestedTodo: function(id, todos) {
+        todos = todos || App.todos;
+        let todo = {
+            content: ' ',
+            completed: false,
+            nestedTodos: [],
+            id: util.uuid()
+        };
+
+        for (let i = 0; i < todos.length; i++) {
+            if (!todos[i].id || Array.isArray(todos[i])) {
+                unwrapTodo(todos[i]);
+            }
+
+            if (todos[i].id === id) {
+                // unshift new todo onto todos[i].nestedTodos
+                todos[i].nestedTodos.unshift(todo);
+                view.displayTodos();
+                return;
+            } else if (todos[i].nestedTodos.length) {
+                let nestedArray = todos[i].nestedTodos;
+                this.newNestedTodo(id, nestedArray);
+            }
+        }
+        view.displayTodos();
+    },
+
     deleteTodo: function(id, todos) {
         todos = todos || App.todos;
 
@@ -90,6 +117,7 @@ var App = {
                 this.deleteTodo(id, nestedArray);
             }
         }
+        view.displayTodos();
     },
 
     changeTodoContent: function(id, todos, newText) {
@@ -450,9 +478,16 @@ function getTodoIdxById(id, todos) {
     }
 };
 
+function capitalize(str) {
+    let noncap = ['the', 'for'];
+    let split = str.split(' ');
+    return split.map((word, i) => {
+        if ( ( !noncap.includes(word) && word.length > 2 ) || i === 0 ) return word.charAt(0).toUpperCase() + word.slice(1);
+        return word;
+    }).join(' ');
+}
 
 let view = {
-
     displayTodos: function() {
         util.save('data', App.todos);
         let todos = App.todos;
@@ -481,7 +516,7 @@ let view = {
                     li.draggable = true;
                     let todoLabel = document.createElement('label');
                     todoLabel.className = 'todo-label';
-                    todoLabel.innerHTML = todo.content;
+                    todoLabel.textContent = capitalize(todo.content);
                     let input = document.createElement('input');
                     input.className = 'toggle';
                     input.setAttribute('type', 'checkbox');
@@ -502,11 +537,16 @@ let view = {
                     }
                     let deleteButton = document.createElement('button');
                     deleteButton.className = 'delete';
-                    deleteButton.innerText = 'X';
+                    deleteButton.textContent = 'X';
 
-                    li.appendChild(todoLabel);
+                    let addNestedButton = document.createElement('button');
+                    addNestedButton.className = 'new-nested';
+                    addNestedButton.textContent = '+';
+
                     li.appendChild(input);
+                    li.appendChild(todoLabel);
                     li.appendChild(deleteButton);
+                    li.appendChild(addNestedButton);
                     ul.appendChild(li);
 
                     if (endOfTree) {
@@ -537,10 +577,15 @@ let view = {
             }
             renderAll(todos, todosUl);
         }
-        // todoInput.focus();
     },
 
     editInput: function(parent, label) {
+        let toggle = label.previousElementSibling;
+        let deleteButton = label.nextElementSibling;
+        let nestedButton = deleteButton.nextElementSibling;
+        toggle.style.visibility = 'hidden';
+        deleteButton.style.visibility = 'hidden';
+        nestedButton.style.visibility = 'hidden';
         let editInput = document.createElement('input');
         editInput.className = 'edit';
         parent.draggable = false;
@@ -549,14 +594,31 @@ let view = {
         editInput.focus();
     },
 
+    newInput: function(el) {
+        // let toggle = label.previousElementSibling;
+        // let deleteButton = label.nextElementSibling;
+        // toggle.style.visibility = 'hidden';
+        // deleteButton.style.visibility = 'hidden';
+        console.log(el.lastChild)
+        let editInput = document.createElement('input');
+        editInput.className = 'edit';
+        el.append(editInput)
+
+        // parent.draggable = false;
+
+        // parent.replaceChild(editInput, label);
+        // editInput.value = label.innerText;
+        editInput.focus();
+    },
+
     eventListeners: function() {
         let mainDiv = document.getElementById('main');
         let todosUl = document.getElementById('todo-list');
         let todoInput = document.getElementById('todo-input');
         let clearCompleted = document.getElementById('clear-completed');
-        let label = document.querySelectorAll('.todo-label');
+        // let label = document.querySelectorAll('.todo-label');
         let howToButton = document.getElementById('how-to-button');
-        let howToDiv = document.getElementsByClassName('how-to')[0]
+        let howToDiv = document.getElementsByClassName('how-to')[0];
 
         howToButton.addEventListener('click', function(e) {
             howToDiv.classList.toggle('hidden');
@@ -597,12 +659,15 @@ let view = {
             }
         }, false);
 
-        let pickedUp;
-        let dropped;
+        let pickedUpX;
+        let droppedX;
+        let pickedUpY;
+        let droppedY;
 
-        // get X position of grabbed element
+        // get X and Y position of grabbed element
         todosUl.addEventListener('mousedown', function(e) {
-            pickedUp = e.screenX;
+            pickedUpX = e.screenX;
+            pickedUpY = e.screenY;
         }, false);
 
         //
@@ -611,39 +676,48 @@ let view = {
             let todo = elClicked.closest('li');
             let label = elClicked.closest('label');
             let todoId = todo.dataset.id;
-            if ( (e.altKey || e.shiftKey) && label !== null ) {
-                view.editInput(todo, label);
-            } else if (elClicked.className === 'toggle') {
-                App.toggleCompleted(todoId);
-                todo.setAttribute('data-completed', App.getCompletedProp(todoId));
-                if (todo.dataset.completed === 'false') {
-                    // run function to recursively complete false up the tree
-                    if (!todo.parentElement) return;
-                    let parent = todo.parentElement.previousElementSibling;
-                    while (parent && parent.dataset.completed === 'true') {
-                        App.toggleCompleted(parent.dataset.id);
-                        parent.dataset.completed = 'false';
-                        parent = todo.parentElement.previousElementSibling.parentElement.previousElementSibling;
+            if (elClicked.className !== 'edit') {
+                if ( (e.altKey || e.shiftKey) && label !== null ) {
+                    view.editInput(todo, label);
+                } else if (elClicked.className === 'toggle') {
+                    App.toggleCompleted(todoId);
+                    todo.setAttribute('data-completed', App.getCompletedProp(todoId));
+                    if (todo.dataset.completed === 'false') {
+                        // run function to recursively complete false up the tree
+                        if (!todo.parentElement) return;
+                        let parent = todo.parentElement.previousElementSibling;
+                        while (parent && parent.dataset.completed === 'true') {
+                            App.toggleCompleted(parent.dataset.id);
+                            parent.dataset.completed = 'false';
+                            parent = todo.parentElement.previousElementSibling.parentElement.previousElementSibling;
+                        }
                     }
-                }
-            } else if (elClicked.className === 'todo-label') {
-                let isFirst = todo.parentElement.firstElementChild;
-                let parentId = todo.parentElement.id;
-                if (todo === isFirst && parentId) {
-                    return;
-                } else if (todo.previousElementSibling) {
-                    App.nestTodo(todoId);
-                } else if (todo.previousElementSibling === null) {
-                    App.unnestTodo(todoId);
-                } else {
-                    return;
-                }
+                } else if (elClicked.className === 'todo-label') {
+                    let isFirst = todo.parentElement.firstElementChild;
+                    let parentId = todo.parentElement.id;
+                    if (todo === isFirst && parentId) {
+                        return;
+                    } else if (todo.previousElementSibling) {
+                        App.nestTodo(todoId);
+                    } else if (todo.previousElementSibling === null) {
+                        App.unnestTodo(todoId);
+                    } else {
+                        return;
+                    }
 
-            } else if (e.target.className === 'delete') {
-                App.deleteTodo(todoId);
-            }
-            if (!e.altKey && !e.shiftKey) {
-                view.displayTodos();
+                } else if (e.target.className === 'delete') {
+                    App.deleteTodo(todoId);
+                } else if (e.target.className === 'new-nested') {
+                    debugger;
+                    App.newNestedTodo(todoId);
+                    // get new nested element, add input element, focus()
+                    view.newInput(todo)
+                    // let ul = todo.lastChild;
+                    // console.log(ul)
+                }
+                if (!e.altKey && !e.shiftKey) {
+                    view.displayTodos();
+                }
             }
         }, false);
 
@@ -669,15 +743,19 @@ let view = {
         }, false);
 
         window.addEventListener('drop', function(e) {
-            dropped = e.screenX;
-            // console.log('picked up at: ' + pickedUp, 'dropped at: ' + dropped, 'Distance dragged: ' + pickedUp - dropped);
-            if ( (pickedUp - dropped !== NaN) && (pickedUp - dropped) > 88) {
+            droppedX = e.screenX;
+            droppedY = e.screenY;
+            // console.log('picked up at: ' + pickedUpX, 'droppedX at: ' + droppedX, 'Distance dragged: ' + pickedUpX - droppedX);
+            if ( (pickedUpX - droppedX !== NaN) && (pickedUpX - droppedX) > 88) {
                 // console.log('accessed the function call to unnest!');
                 App.unnestTotally(draggedTodo);
-            } else if ( (pickedUp - dropped !== NaN) && (pickedUp - dropped <= 88 && pickedUp - dropped >= 1) ) {
-                // console.log('accessed the function call to unnest!');
-                App.unnestTodo(draggedTodo);
-            } else if ( (dropped - pickedUp != NaN) && (dropped - pickedUp > 22) ) {
+            } else if ( (pickedUpX - droppedX !== NaN) &&
+            (pickedUpX - droppedX <= 88 && pickedUpX - droppedX >= 1) ) {
+                if (pickedUpY - droppedY < 40 && droppedY - pickedUpY < 40) {
+                    App.unnestTodo(draggedTodo);
+                }
+            } else if ( (droppedX - pickedUpX != NaN) &&
+            (droppedX - pickedUpX > 22) ) {
                 App.nestTodo(draggedTodo);
             }
             let dropTarget = e.target.closest('li');
@@ -694,3 +772,13 @@ let view = {
 App.init();
 
 
+function findChild(el, type) {
+debugger;
+    if (el.children) {
+        let arr = Array.from(el.children)
+        for (let i = 0; i < arr.length; i++) {
+            if (arr[i].tagName === type) console.log(arr[i]);
+        }
+    }
+
+}
