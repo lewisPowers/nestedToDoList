@@ -96,10 +96,12 @@ var App = {
             if (!todos[i].id || Array.isArray(todos[i])) {
                 unwrapTodo(todos[i]);
             } else if (todos[i].id === id) {
-                if (todos[i].nestedTodos.length) {
-                    if (!App.checkNestsForCompletion(todos[i])) return;
+                if (todos[i].nestedTodos.length && App.nestsComplete(todos[i]) === false && window.confirm("Not all subtasks are marked as complete and will be deleted. Are you sure you want to delete this item and all its nested content?")){
+                    todos.splice(i, 1);
+                    return view.displayTodos();
                 }
-                return todos.splice(i, 1);
+                // todos.splice(i, 1);
+                // return view.displayTodos();
             }
             if (todos[i].nestedTodos.length) {
                 let nestedArray = todos[i].nestedTodos;
@@ -204,6 +206,7 @@ var App = {
     // if one is not
 
     nestsComplete: function(todos) {
+        todos = todos.nestedTodos;
         return todos.every(function(item) {
             return item.completed;
         })
@@ -218,10 +221,10 @@ var App = {
         // if (Array.isArray(todo)) {
 
         // }
-        if (todos.length) {
+        if (todos !== undefined && todos.length) {
             done = false;
             while (!done) {
-                todos.forEach(function(todo, i) {
+                todos.forEach(function(todo) {
                     if (todo.completed) {
                         if (todo.nestedTodos.length) {
                             App.checkNestsForCompletion(todo.nestedTodos)
@@ -741,13 +744,9 @@ let view = {
                     input.addEventListener('keydown', function(e) {
                         if (e.key === 'Enter') {
                             console.log('keydown event fired at line 743');
-                            App.newNestedTodo(todoId, input.value);
-                            input.removeEventListener(function(e) {
-
-                            })
+                            if (input.value) App.newNestedTodo(todoId, input.value);
                         }
                     })
-
                 }
                 // if (!e.altKey && !e.shiftKey) {
                 //     view.displayTodos();
