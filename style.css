@@ -62,13 +62,10 @@ h1,
     border-style: none;
 }
 
-.delete:hover {
-    background-color: skyblue;
-    cursor: alias;
-}
-
+.delete:hover,
 .new-nested:hover {
     background-color: #b861c6;
+    cursor: pointer;
 }
 
 #how-to-button {
@@ -174,14 +171,18 @@ h1,
 }
 
 .toggle,
-.li > button,
-.new-nested {
+.label {
     margin-left: 4px;
 }
 
 .delete,
-.toggle {
+.toggle,
+.new-nested {
     transform: scale(1.2);
+}
+
+.new-nested {
+    margin-left:9px;
 }
 
 @media only screen and (max-width:600px) {
