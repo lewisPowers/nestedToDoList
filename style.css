@@ -64,8 +64,10 @@ h1,
 
 .delete:hover,
 .new-nested:hover {
+    background-color: rgb(98, 98, 98);
     background-color: #b861c6;
     cursor: pointer;
+
 }
 
 #how-to-button {
