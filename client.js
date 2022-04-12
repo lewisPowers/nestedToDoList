@@ -54,11 +54,6 @@ var App = {
         view.displayTodos();
     },
 
-    // Create new todo and add it to the todos array.
-    // addTodo: function(todo) {
-    //     this.todos.push(new Todo(todo));
-    //     view.displayTodos();
-    // },
     createTodo: function(content) {
         let todo = {
             content: content,
@@ -70,48 +65,42 @@ var App = {
         view.displayTodos();
     },
 
-    newNestedTodo: function(id, todos) {
+    newNestedTodo: function(id, content, todos, todo) {
         todos = todos || App.todos;
-        let todo = {
-            content: ' ',
+        todo = todo || {
+            content: content,
             completed: false,
             nestedTodos: [],
             id: util.uuid()
         };
-
         for (let i = 0; i < todos.length; i++) {
             if (!todos[i].id || Array.isArray(todos[i])) {
                 unwrapTodo(todos[i]);
             }
-
             if (todos[i].id === id) {
-                // unshift new todo onto todos[i].nestedTodos
                 todos[i].nestedTodos.unshift(todo);
                 view.displayTodos();
                 return;
             } else if (todos[i].nestedTodos.length) {
                 let nestedArray = todos[i].nestedTodos;
-                this.newNestedTodo(id, nestedArray);
+                this.newNestedTodo(id, content, nestedArray, todo);
             }
         }
-        view.displayTodos();
+        // view.displayTodos();
+        return;
     },
 
     deleteTodo: function(id, todos) {
         todos = todos || App.todos;
-
         for (let i = 0; i < todos.length; i++) {
             if (!todos[i].id || Array.isArray(todos[i])) {
                 unwrapTodo(todos[i]);
             } else if (todos[i].id === id) {
                 if (todos[i].nestedTodos.length) {
-                    if (!App.checkNestsForCompletion(todos[i])) {
-                        return;
-                    }
+                    if (!App.checkNestsForCompletion(todos[i])) return;
                 }
                 return todos.splice(i, 1);
             }
-
             if (todos[i].nestedTodos.length) {
                 let nestedArray = todos[i].nestedTodos;
                 this.deleteTodo(id, nestedArray);
@@ -349,7 +338,8 @@ var App = {
                             spliced = spliced[0];
                         }
                         target.push(spliced);
-                        return done = true;
+                        done = true;
+                        return view.displayTodos()
                     } else if (todos[i].nestedTodos.length) {
                         let nestedArray = todos[i].nestedTodos;
                         closeLoop(id, nestedArray);
@@ -381,7 +371,8 @@ var App = {
                             targetArray = App.todos;
                         }
                         targetArray.splice(mainIdx, 0, todoToMove);
-                        return done = true;
+                        done = true;
+                        return view.displayTodos();
                     } else if (todos[i].nestedTodos.length) {
                         targetArray = todos;
                         let nestedArray = todos[i].nestedTodos;
@@ -410,7 +401,8 @@ var App = {
                         let todoToMove = todos[i];
                         todos.splice(i, 1);
                         App.todos.splice(mainIdx, 0, todoToMove);
-                        return done = true;
+                        done = true;
+                        return view.displayTodos();
                     } else if (todos[i].nestedTodos.length) {
                         let nestedArray = todos[i].nestedTodos;
                         closeLoop(id, nestedArray);
@@ -422,67 +414,69 @@ var App = {
     }
 };
 
-function logIds(todos) {
+// function logIds(todos) {
 
-    todos = todos || App.todos;
-    todos.forEach(function(todo) {
-        if (!todo.id) {
-            return todo[0];
-        } else if (Array.isArray(todo)) {
-            return todo[0];
-        } else {
-            console.log(todo.id);
-        }
+//     todos = todos || App.todos;
+//     todos.forEach(function(todo) {
+//         if (!todo.id) {
+//             return todo[0];
+//         } else if (Array.isArray(todo)) {
+//             return todo[0];
+//         } else {
+//             console.log(todo.id);
+//         }
 
-        if (todo.nestedTodos.length) {
-            let nestedArray = todo.nestedTodos;
-            return logIds(nestedArray);
-        }
-    })
-};
+//         if (todo.nestedTodos.length) {
+//             let nestedArray = todo.nestedTodos;
+//             return logIds(nestedArray);
+//         }
+//     })
+// };
 
-function getTodoById(id, todos) {
+// function getTodoById(id, todos) {
 
-    todos = todos || App.todos;
-    todos.forEach(function(todo) {
-        if (!todo.id) {
-            return todo[0];
-        } else if (Array.isArray(todo)) {
-            return todo[0];
-        } else  if (todo.id === id) {
-            return todo;
-        }
+//     todos = todos || App.todos;
+//     todos.forEach(function(todo) {
+//         if (!todo.id) {
+//             return todo[0];
+//         } else if (Array.isArray(todo)) {
+//             return todo[0];
+//         } else  if (todo.id === id) {
+//             return todo;
+//         }
 
-        if (todo.nestedTodos.length) {
-            let nestedArray = todo.nestedTodos;
-            return getTodoById(id, nestedArray);
-        }
-    })
-};
+//         if (todo.nestedTodos.length) {
+//             let nestedArray = todo.nestedTodos;
+//             return getTodoById(id, nestedArray);
+//         }
+//     })
+// };
 
-function getTodoIdxById(id, todos) {
+// function getTodoIdxById(id, todos) {
 
-    todos = todos || App.todos;
-    for (let i = 0; i < todos.length; i++) {
-        let todo = todos[i];
-        if (!todo.id || Array.isArray(todo)) {
-            return todo[0];
-        } else  if (todo.id === id) {
-            return i;
-        }
+//     todos = todos || App.todos;
+//     for (let i = 0; i < todos.length; i++) {
+//         let todo = todos[i];
+//         if (!todo.id || Array.isArray(todo)) {
+//             return todo[0];
+//         } else  if (todo.id === id) {
+//             return i;
+//         }
 
-        if (todo.nestedTodos.length) {
-            let nestedArray = todo.nestedTodos;
-            return getTodoIdxById(id, nestedArray);
-        }
-    }
-};
+//         if (todo.nestedTodos.length) {
+//             let nestedArray = todo.nestedTodos;
+//             return getTodoIdxById(id, nestedArray);
+//         }
+//     }
+// };
 
 function capitalize(str) {
     let noncap = ['the', 'for'];
     let split = str.split(' ');
     return split.map((word, i) => {
-        if ( ( !noncap.includes(word) && word.length > 2 ) || i === 0 ) return word.charAt(0).toUpperCase() + word.slice(1);
+        if ( ( !noncap.includes(word) && word.length > 2 ) ||
+        i === 0 ||
+        word ==='i' ) return word.charAt(0).toUpperCase() + word.slice(1);
         return word;
     }).join(' ');
 }
@@ -611,6 +605,22 @@ let view = {
         editInput.focus();
     },
 
+    findChildUlLi: function(parent) {
+        console.log(parent)
+        let target;
+        let label;
+        if (parent.lastChild.tagName !== 'UL') {
+            console.log('not a UL')
+        } else {
+            // target = parent.lastChild.firstElementChild;
+            target = parent.children[4].firstElementChild;
+            label = target.children[1];
+            console.log('UL Found');
+            console.log(target.closest('li'), label);
+            view.editInput(target, label);
+        }
+    },
+
     eventListeners: function() {
         let mainDiv = document.getElementById('main');
         let todosUl = document.getElementById('todo-list');
@@ -708,22 +718,45 @@ let view = {
                 } else if (e.target.className === 'delete') {
                     App.deleteTodo(todoId);
                 } else if (e.target.className === 'new-nested') {
-                    debugger;
-                    App.newNestedTodo(todoId);
-                    // get new nested element, add input element, focus()
-                    view.newInput(todo)
-                    // let ul = todo.lastChild;
-                    // console.log(ul)
+                    // App.newNestedTodo(todoId);
+                    // view.findChildUlLi(todo);
+                    // debugger;
+                    e.preventDefault();
+                    // find or add ul to parent li
+                    // if no ul, create one;
+                    let ul;
+                    if (todo.lastChild.tagName !== 'UL') {
+                        ul = document.createElement('ul');
+                        todo.append(ul);
+                        console.log(ul)
+                    } else {
+                        ul = todo.lastChild
+                    }
+                    let li = document.createElement('li');
+                    let input = document.createElement('input');
+                    input.className = 'add-new-nested';
+                    li.append(input);
+                    ul.prepend(li);
+                    input.focus();
+                    input.addEventListener('keydown', function(e) {
+                        if (e.key === 'Enter') {
+                            console.log('keydown event fired at line 743');
+                            App.newNestedTodo(todoId, input.value);
+                            input.removeEventListener(function(e) {
+
+                            })
+                        }
+                    })
+
                 }
-                if (!e.altKey && !e.shiftKey) {
-                    view.displayTodos();
-                }
+                // if (!e.altKey && !e.shiftKey) {
+                //     view.displayTodos();
+                // }
             }
         }, false);
 
         let draggedTodo;
         let targetTodo;
-
 
         window.addEventListener('drag', function(e) {
             let elDragged = e.target;
