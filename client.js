@@ -100,8 +100,6 @@ var App = {
                     todos.splice(i, 1);
                     return view.displayTodos();
                 }
-                // todos.splice(i, 1);
-                // return view.displayTodos();
             }
             if (todos[i].nestedTodos.length) {
                 let nestedArray = todos[i].nestedTodos;
