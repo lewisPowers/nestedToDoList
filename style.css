@@ -19,6 +19,19 @@ body {
     margin: 0 auto;
 }
 
+/* styles for portfolio page */
+/* input:focus-visible {
+    outline-color: #e4c180;
+}
+
+input[type='checkbox']:checked {
+    accent-color: #e4c180 !important;
+} */
+
+ul {
+    overflow: hidden !important;
+}
+
 h1 {
     text-align: center;
     margin: 25px 0;
@@ -32,6 +45,12 @@ h1,
 .top {
     background-color: rgba(153, 135, 235, 0);
 }
+
+/* .toggle {
+    position: absolute;
+    left:-23px;
+    top: 11px;
+} */
 
 .toggle,
 .delete,
@@ -105,6 +124,7 @@ h1,
 }
 
 #todo-list > .li {
+    position: relative;
     line-height: 33px;
     border-bottom: 1px solid rgba(153, 135, 235, 0.486);
     border-bottom-left-radius: 11px;
@@ -118,7 +138,7 @@ h1,
 #todo-list {
     background-color: rgba(153, 135, 235, 0.062);
     padding: 25px;
-    overflow-x: scroll;
+    overflow:hidden;
 }
 
 .nested .li,
@@ -181,6 +201,37 @@ h1,
 .toggle,
 .new-nested {
     transform: scale(1.2);
+}
+
+.fadein {
+    animation: slidedown 400ms ease-in;
+}
+
+@keyframes fadein {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slidedown {
+    from {
+        transform: translateY(-528px);
+    }
+    to {
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideup {
+    from {
+        transform: translateY(528px);
+    }
+    to {
+        transform: translateY(0);
+    }
 }
 
 .new-nested {
