@@ -2,8 +2,7 @@
 
 ### Frontend productivity application using Javascript
 
-<img width="800" alt="Screen Shot 2022-08-13 at 11 49 51 AM" src="https://user-images.githubusercontent.com/52840741/184506979-88fd132e-3057-47a6-a269-95b988abe1c1.png">
-
+<img width="800" alt="Screen Shot 2022-08-13 at 11 49 51 AM" src="https://user-images.githubusercontent.com/52840741/184506979-88fd132e-3057-47a6-a269-95b988abe1c1.png"><img width="800" alt="Screen Shot 2022-08-13 at 11 54 40 AM" src="https://user-images.githubusercontent.com/52840741/184508435-167f790a-7f01-47f4-a502-5447a9f20235.png">
 
 #### Allows users to create comprehensive list of tasks & nested subtasks:
 - Add a task onto the list
@@ -26,15 +25,22 @@
   - Nesting items by clicking or dragging
   - Un-nesting items by clicking or dragging
   
-  <img width="645" alt="Screen Shot 2022-08-13 at 11 59 04 AM" src="https://user-images.githubusercontent.com/52840741/184507246-04af0a65-1a7b-43e0-b781-bf2e98cc66a8.png">
+<img width="645" alt="Screen Shot 2022-08-13 at 11 59 04 AM" src="https://user-images.githubusercontent.com/52840741/184507246-04af0a65-1a7b-43e0-b781-bf2e98cc66a8.png">
   
 - Hovering over item reveals options 
   - Click checkbox on left of item text to mark complete
   - Click the 'X' to delete item
   - Click the '+' to add a new nested item in place 
     
-   <img width="811" alt="Screen Shot 2022-08-13 at 11 55 22 AM" src="https://user-images.githubusercontent.com/52840741/184507258-f0f12512-b124-46a9-84a1-4a844e886504.png">
+<img width="811" alt="Screen Shot 2022-08-13 at 11 55 22 AM" src="https://user-images.githubusercontent.com/52840741/184507258-f0f12512-b124-46a9-84a1-4a844e886504.png">
 
+- Multiple layers of nesting 
+
+<img width="645" alt="Screen Shot 2022-08-13 at 12 34 36 PM" src="https://user-images.githubusercontent.com/52840741/184508350-e85c8a21-5ceb-4ba2-b4ec-b457be243479.png">
+
+- Infinite nesting potential
+
+<img width="645" alt="Screen Shot 2022-08-13 at 12 40 55 PM" src="https://user-images.githubusercontent.com/52840741/184508422-886b3d19-3000-487f-8a52-4798b58afb8d.png">
 
 
 # ___Tech Used___
