@@ -42,6 +42,9 @@
 
 <img width="645" alt="Screen Shot 2022-08-13 at 12 40 55 PM" src="https://user-images.githubusercontent.com/52840741/184508422-886b3d19-3000-487f-8a52-4798b58afb8d.png">
 
+- Alert popup if there is an attempt to delete a task that has unfinished subtasks
+
+<img width="645" alt="Screen Shot 2022-08-13 at 12 48 10 PM" src="https://user-images.githubusercontent.com/52840741/184508693-786ca1b7-4e4a-4833-ad03-0718152b0836.png">
 
 # ___Tech Used___
 
